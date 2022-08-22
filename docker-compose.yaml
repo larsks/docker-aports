@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  crond:
+    build:
+      context: .
+    volumes: &volumes
+      - "apk_builder_home:/home/builder"
+      - "aports:/src/aports"
+    entrypoint:
+      - /usr/sbin/crond
+      - -f
+  builder:
+    build:
+      context: .
+    volumes: *volumes
+    environment:
+      BUILDER_SSHKEY_URL: https://github.com/larsks.keys
+    ports:
+      - "2200:22"
+
+volumes:
+  apk_builder_home:
+  aports:
+    external: true
